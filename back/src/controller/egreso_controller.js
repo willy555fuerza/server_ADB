@@ -23,8 +23,6 @@ class Users {
     try {
       const { fecha_egreso, id_usuario, tipo_egresos, monto,  fecha_registro } = req.body;
 
-      //console.log(monto, fecha_ingreso, usuario, tipo_ingresos, miembro )
-      // Llamar al método para crear el usuario en el modelo
 
       const query = `
       INSERT INTO egreso (fecha_egreso, id_usuario, id_tipo_egresos,monto, fecha_registro)

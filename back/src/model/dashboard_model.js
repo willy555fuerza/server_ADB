@@ -53,17 +53,7 @@ class DashboardModel {
         }
     }
 
-    /* static async getVentasCount(req, res) {
-        try {
-            const pool = await connectToPostgres();
-            const result = await pool.query('SELECT COUNT(*) AS count FROM venta');
-            await disconnectFromPostgres(pool); // Disconnect from the database
-            res.status(200).json(result.rows[0]);
-        } catch (error) {
-            console.error('Error al obtener el conteo de ventas:', error);
-            res.status(500).json({ error: 'Error al obtener el conteo de ventas' });
-        }
-    } */
+ 
 }
 
 module.exports = DashboardModel;

@@ -113,10 +113,6 @@ const obtenerToken = async () => {
             const listaData = await listaRes.json();
 
 
-            /* const clientesData = await clientesRes.json();
-            const productosData = await productosRes.json();
-            const ventasData = await ventasRes.json(); */
-
             // Actualizar los elementos HTML con los datos recibidos
             document.getElementById('usuarios').textContent = usuariosData.count;
             document.getElementById('miembro').textContent = miembroData.count;
@@ -124,9 +120,6 @@ const obtenerToken = async () => {
             document.getElementById('lista').textContent = listaData.count;
 
 
-            /* document.getElementById('clientes').textContent = clientesData.count;
-            document.getElementById('productos').textContent = productosData.count;
-            document.getElementById('ventas').textContent = ventasData.count; */
         } else {
             throw new Error('Error al obtener los datos');
         }

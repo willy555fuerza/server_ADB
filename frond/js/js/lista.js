@@ -132,37 +132,7 @@ const obtenerToken = async () => {
       }
     };
     
-   /*  const getAllMiasures = async () => {
-      try {
-        // Verificar si el token está presente en el localStorage
-        const token = localStorage.getItem("token");
-        if (!token) {
-          // Si el token no está presente, redirigir al usuario a la página de inicio de sesión
-          window.location.href = "http://127.0.0.1:5500/frond/Z.administrador/login.html";
-          return; // Detener la ejecución del código
-        }
-        const response = await fetch("http://localhost:3009/ADB/miembro",{
-          headers:{
-            Authorization: `Bearer ${token}`,
-          }
-        });
-        if (!response.ok) {
-          throw new Error("Error en la solicitud");
-        }
-        const result = await response.json();
-        //console.log(result.data)
-        if (result.error) {
-          console.error("Error:", result.message);
-          return [];
-        } else {
-          return result.data;
-        }
-      } catch (error) {
-        console.error("Error:", error.message);
-        return [];
-      }
-    };
-   */
+  
     const populateSelect = (selectElement, options, valueFieldName, textFieldName) => {
       selectElement.innerHTML = '<option value="">Seleccione una opción</option>';
       options.forEach(option => {
@@ -350,37 +320,6 @@ const obtenerToken = async () => {
       }
   };
   
-  /* const getAllMiasure = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            window.location.href = "http://127.0.0.1:5500/frond/Z.administrador/login.html";
-            return {};
-        }
-        const response = await fetch("http://localhost:3009/ADB/miembro", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        if (!response.ok) {
-            throw new Error("Error en la solicitud");
-        }
-        const result = await response.json();
-        if (result.error) {
-            console.error("Error:", result.message);
-            return {};
-        } else {
-            return result.data.reduce((acc, miasure) => {
-                acc[miasure.id_miembro] = miasure.nombres;
-                return acc;
-            }, {});
-        }
-    } catch (error) {
-        console.error("Error:", error.message);
-        return {};
-    }
-  }; */
-  
   const getAllCategoriesPromise = getAllCategorie();
   const getAllMeasuresPromise = getAllMeasure();
   /* const getAllMiasuresPromise = getAllMiasure(); */
@@ -421,14 +360,6 @@ const obtenerToken = async () => {
       const buttonColor = estado === true ? "btn btn-outline-success" : "btn btn-outline-danger";
       const buttontxt = estado === true ? "SI" : "NO";
     
-      // Mostrar la contraseña como asteriscos
-      /* const maskedPassword = contraseña.replace(/./g, '*'); */
-      // Mostrar solo los últimos 4 caracteres de la contraseña cifrada
-      /* const maskedPassword = `******${contraseña.slice(-4)}`; */
-      // Mostrar la contraseña cifrada como asteriscos
-      /* const maskedPassword = '*'.repeat(contraseña.length); */
-      // Mostrar los primeros 2 y últimos 2 caracteres de la contraseña cifrada
-      /* const maskedPassword = `${contraseña.slice(0, 2)}..${contraseña.slice(-2)}`; */
   
       // Esperar a que se resuelvan las promesas de getAllCategories y getAllMeasures
       const miembros = await getAllCategoriesPromise;
@@ -438,9 +369,6 @@ const obtenerToken = async () => {
   
       const miembroNombre = miembros[id_miembro] || "Desconocida";
       const ministerioNombre = ministerios[id_ministerio] || "Desconocida";
-      /* const miembroNombre = miembro[id_miembro] || "Desconocida"; */
-      //console.log("Nombre de la categoría:", categoriaNombre);
-      //console.log("Nombre de la medida:", medidaNombre);
   
       return `
           <tr id="producto-row-${id_lista}">
@@ -470,125 +398,6 @@ const obtenerToken = async () => {
           </tr>
       `;
   };
-    /* const render = (data) => {
-        const filteredProductos = data.filter(user => user.estado == true);
-        const sortedProductos = filteredProductos.sort((a, b) => a.id_producto - b.id_producto);
-      
-        if (Array.isArray(sortedProductos) && sortedProductos.length > 0) {
-          const cardsHTML = sortedProductos.map(item => Productos(item)).join('');
-          paginaProductos.innerHTML = cardsHTML;
-        } else {
-          paginaProductos.innerHTML = '<tr><td colspan="8">NO SE ENCONTRARON USUARIOS.</td></tr>';
-        }
-      }; */
-     /*  const render =  async (data) => {
-        const sorteproducto = data.sort((a, b) => {
-          // Si a está habilitado y b no, a debe ir antes que b
-          if (a.estado && !b.estado) {
-            return -1;
-          }
-          // Si b está habilitado y a no, b debe ir antes que a
-          if (!a.estado && b.estado) {
-            return 1;
-          }
-          // Si ambos están habilitados o deshabilitados, ordenar por id_usuario
-          return a.id_producto - b.id_producto;
-        });
-      
-        if (Array.isArray(sorteproducto) && sorteproducto.length > 0) {
-          const cardsHTML = sorteproducto.map((item) => Productos(item)).join("");
-          paginaProductos.innerHTML = cardsHTML;
-      
-        // Verificar si la tabla ya ha sido inicializada
-        if (!$.fn.DataTable.isDataTable("#myTable")) {
-          // Si la tabla no ha sido inicializada, inicializar DataTables
-          $("#myTable").DataTable({
-            language: {
-              // Configuración del idioma
-              decimal: "",
-              emptyTable: "No hay información",
-              info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-              infoEmpty: "Mostrando 0 to 0 of 0 Entradas",
-              infoFiltered: "(Filtrado de _MAX_ total entradas)",
-              infoPostFix: "",
-              thousands: ",",
-              lengthMenu: "Mostrar _MENU_ Entradas",
-              loadingRecords: "Cargando...",
-              processing: "Procesando...",
-              search: "Buscar:",
-              zeroRecords: "Sin resultados encontrados",
-              paginate: {
-                first: "Primero",
-                last: "Ultimo",
-                next: ">",
-                previous: "<",
-              },
-            },
-            lengthMenu: [
-              [5, 10, 25, 50, -1],
-              [5, 10, 25, 50, "Todos"],
-            ], // Opciones de longitud de página
-            pageLength: 5, // Mostrar 5 filas por página de manera predeterminada
-            rowCallback: function(row, data) {
-              if (data[5] < 10) {
-                  $('td:eq(5)', row).css('color', 'red'); // Cambia el color de las celdas en la cuarta columna si el valor es menor a 20
-              }
-            },
-            responsive: true,
-          });
-        }
-      
-        } else {
-          paginaProductos.innerHTML =
-            '<tr><td colspan="8">NO SE ENCONTRARON PRODUCTOS.</td></tr>';
-        }
-      };
-      
-      const getAll = async () => {
-        try {
-          // Verificar si el token está presente en el localStorage
-          const token = localStorage.getItem("token");
-          if (!token) {
-            // Si el token no está presente, redirigir al usuario a la página de inicio de sesión
-            window.location.href = "http://127.0.0.1:5500/frond/Z.administrador/login.html";
-            return; // Detener la ejecución del código
-          }
-          const response = await fetch("http://localhost:3009/ADB/productos",{
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }
-        })
-          if (!response.ok) {
-            throw new Error("Error en la solicitud");
-          }
-          const result = await response.json();
-          //console.log(result); 
-          if (result.error) {
-            console.error("Error:", result.message);
-            alert(result.message);
-          } else {
-            render(result.data);
-          }
-        } catch (error) {
-          console.error("Error:", error.message);
-          // Crear un elemento HTML para mostrar el mensaje de error
-          const errorMessage = document.createElement("div");
-          errorMessage.innerHTML = `
-              <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
-                <div class="col-md-6 text-center p-4">
-                  <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
-                  <h1 class="display-1 fw-bold">Error 404</h1>
-                  <h1 class="mb-4">Page Not Found</h1>
-                  <p class="mb-4">${error.message}</p>
-                  <a class="btn btn-primary rounded-pill py-3 px-5" href="">Go Back To Home</a>
-                </div>
-              </div>
-          `;
-          // Agregar el mensaje de error al body del documento
-          document.getElementById("chart").innerHTML = errorMessage.innerHTML;
-        }
-      };  */
       
       const render = async (data) => {
         try {
@@ -702,9 +511,6 @@ const obtenerToken = async () => {
     
    
     //*************renderizado de tabla usuarios y mostrar tabla usuario*******************/
-    
-  
-  
   
     let isEditMode = false;
     

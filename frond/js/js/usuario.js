@@ -85,14 +85,6 @@ formAgregarUsuario.addEventListener("submit", async function (event) {
   const usuario = document.getElementById("usuario").value;
   const contraseña = document.getElementById("contraseña").value;
 
-  // Crear un objeto FormData para enviar datos de formulario, incluida la foto
-  /* const formData = new FormData();
-  formData.append("nombres", nombres);
-  formData.append("apellidos", apellidos);
-  //formData.append("foto", foto); // Agregar la foto al FormData
-  formData.append("perfil", perfil);
-  formData.append("usuario", usuario);
-  formData.append("password", contraseña); */
 
   try {
     // Verificar si el token está presente en el localStorage
@@ -190,15 +182,7 @@ const Users = ({
     estado === true ? "btn btn-outline-success" : "btn btn-outline-danger";
   const buttontxt = estado === true ? "SI" : "NO";
 
-  // Mostrar la contraseña como asteriscos
-  /* const maskedPassword = contraseña.replace(/./g, '*'); */
-  // Mostrar solo los últimos 4 caracteres de la contraseña cifrada
-  /* const maskedPassword = `******${contraseña.slice(-4)}`; */
-  // Mostrar la contraseña cifrada como asteriscos
-  /* const maskedPassword = '*'.repeat(contraseña.length); */
-  // Mostrar los primeros 2 y últimos 2 caracteres de la contraseña cifrada
-  /* const maskedPassword = `${contraseña.slice(0, 2)}..${contraseña.slice(-2)}`; */
-  /* <!--<td style="width:10%;"><img src="data:image/jpeg;base64,${foto}" class="img-responsive img-fluid" alt="Responsive image"></td>--> */
+ 
   return `
             <tr id="user-row-${id_usuario}">  <!-- Agregar un ID único para la fila --> 
                 <td>${id_usuario}</td>
@@ -229,18 +213,6 @@ const Users = ({
             </tr>
     `;
 };
-
-/* const render = (data) => {
-    const filteredUsers = data.filter(user => user.estado == true);
-    const sortedUsers = filteredUsers.sort((a, b) => a.id_usuario - b.id_usuario);
-  
-    if (Array.isArray(sortedUsers) && sortedUsers.length > 0) {
-      const cardsHTML = sortedUsers.map(item => Users(item)).join('');
-      paginaUsers.innerHTML = cardsHTML;
-    } else {
-      paginaUsers.innerHTML = '<tr><td colspan="8">NO SE ENCONTRARON USUARIOS.</td></tr>';
-    }
-  }; */
 
 const render = (data) => {
   const sortedUsers = data.sort((a, b) => {
