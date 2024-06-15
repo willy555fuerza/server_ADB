@@ -16,7 +16,7 @@ logoutButton.addEventListener('click', async (e) => {
             // Elimina el token del almacenamiento local
             localStorage.removeItem('token');
             // Redirige al usuario a la página de inicio de sesión
-            window.location.href = 'http://127.0.0.1:5500/frond/login.html';
+            window.location.href = 'http://127.0.0.1:5500/frond/Z.administrador/login.html';
         } else {
             const errorData = await response.json();
             console.error('Error al cerrar sesión:', errorData.error);

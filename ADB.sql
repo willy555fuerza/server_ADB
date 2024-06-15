@@ -6,7 +6,6 @@ use ADB_PROYECT;
 -- Cuadro de texto, cuadro combinado, select, cuadro de control, llenar select dependiente de otro select
 
 
-
 CREATE TABLE usuario (
     id_usuario SERIAL PRIMARY KEY,
     nombres VARCHAR(150) COLLATE "C" NOT NULL,
@@ -16,11 +15,12 @@ CREATE TABLE usuario (
     usuario VARCHAR(100) COLLATE "C" UNIQUE NOT NULL,
     contraseña VARCHAR(200) COLLATE "C" NOT NULL,
     fecha_registro TIMESTAMP NOT NULL,
+	primerlogin BOOLEAN DEFAULT TRUE,
     estado BOOLEAN DEFAULT TRUE
 );
 
 INSERT INTO usuario (nombres, apellidos, foto, perfil, usuario, contraseña,   fecha_registro)
-VALUES ('LUNA', 'ROSA', null, 'Administrador', 'willy', '$2a$12$p7nbpolyn/E1GV8EYzGgE.kssTEvozi7ncTLC3HAkQqBjxhqCbSRm', CURRENT_TIMESTAMP);
+VALUES ('LUNA', 'ROSA', null, 'Administrador', 'willy', '$$2a$12$BG0VypuPEhOPV0Ddc5WSpegACk7FSoWYAiQHm0xE6qjmyAy6I1.5C', CURRENT_TIMESTAMP);
 select * from usuario;
 
 
@@ -79,19 +79,19 @@ select * from tipo_ingresos;
 
 CREATE TABLE ingreso (
     id_ingreso SERIAL PRIMARY KEY,
-    monto DECIMAL(10, 2) NULL, -- Cambiado a tipo DECIMAL
     fecha_ingreso TIMESTAMP NOT NULL,
    
 	
     id_usuario INTEGER REFERENCES usuario(id_usuario),
     id_tipo_ingresos INTEGER REFERENCES tipo_ingresos(id_tipo_ingresos),
     id_miembro INTEGER REFERENCES miembro(id_miembro),
+    monto DECIMAL(10, 2) NULL, -- Cambiado a tipo DECIMAL
     fecha_registro TIMESTAMP NOT NULL,
     estado BOOLEAN DEFAULT TRUE
 ); 
  
- INSERT INTO ingreso (monto, fecha_ingreso, estado, id_usuario, id_tipo_ingresos, id_miembro)
-VALUES (5.99, CURRENT_TIMESTAMP, TRUE, 1, 6,4);
+INSERT INTO ingreso (fecha_ingreso, id_usuario, id_tipo_ingresos, id_miembro, monto, fecha_registro)
+VALUES (CURRENT_TIMESTAMP, 40, 16, 5, 10.2, CURRENT_TIMESTAMP);
 
 
 SELECT * FROM tipo_ingresos WHERE id_tipo_ingresos = 7;
@@ -126,18 +126,20 @@ select * from tipo_egresos;
 
 CREATE TABLE egreso (
     id_egreso SERIAL PRIMARY KEY,
-    monto DECIMAL(10, 2) NULL, -- Cambiado a tipo DECIMAL
     fecha_egreso TIMESTAMP NOT NULL,
 
 	
     id_usuario INTEGER REFERENCES usuario(id_usuario),
     id_tipo_egresos INTEGER REFERENCES tipo_egresos(id_tipo_egresos),
+    monto DECIMAL(10, 2) NULL, -- Cambiado a tipo DECIMAL
     fecha_registro TIMESTAMP NOT NULL,
     estado BOOLEAN DEFAULT TRUE
 ); 
  
- INSERT INTO egreso (monto, fecha_egreso, estado, id_usuario, id_tipo_egresos, id_miembro)
-VALUES (5.99, CURRENT_TIMESTAMP, TRUE, 8, 6,5);
+INSERT INTO egreso (fecha_egreso, estado, id_usuario, id_tipo_egresos,monto, fecha_registro)
+VALUES (CURRENT_TIMESTAMP, TRUE, 40, 3,5.99,CURRENT_TIMESTAMP);
+
+SELECT * FROM egreso
 
 
 SELECT * FROM tipo_egresos WHERE id_tipo_egresos = 2;

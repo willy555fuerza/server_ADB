@@ -28,7 +28,7 @@ class Usersmodel {
   }
 
   // Método para agregar un nuevo usuario
-  static async createUser(monto, fecha_ingreso, usuario, tipo_ingresos, miembro ) {
+  static async createUser(fecha_ingreso, id_usuario, tipo_ingresos, miembro, monto ) {
     let pool;
     try {
         // Conectar a la base de datos PostgreSQL
@@ -45,18 +45,18 @@ class Usersmodel {
         const stock = 0
         // Consulta para insertar un nuevo usuario en la base de datos
         const query = `
-            INSERT INTO ingreso (monto, fecha_ingreso, id_usuario, id_tipo_ingresos, id_miembro, fecha_registro)
+            INSERT INTO ingreso (fecha_ingreso, id_usuario, id_tipo_ingresos, id_miembro, monto, fecha_registro)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
         `;
 
         // Ejecutar la consulta con parámetros
         const result = await pool.query(query, [
-          monto,
           fecha_ingreso,
-          usuario,
+          id_usuario,
           tipo_ingresos,
           miembro,
+          monto,
           fecha_registro
         ]);
 
@@ -74,10 +74,10 @@ class Usersmodel {
 }
 
   // Metodo para actualizar el usuario
-  static async updateUser(id_ingreso, monto,fecha_ingreso) {
+  static async updateUser(id_ingreso, monto) {
     let pool;
     try {
-      console.log(id_ingreso, monto,fecha_ingreso)
+      console.log(id_ingreso, monto)
       // Conectar a la base de datos PostgreSQL
       pool = await connectToPostgres();
       if (!pool) {
@@ -87,16 +87,13 @@ class Usersmodel {
       // Consulta para actualizar un usuario en la base de datos
       const query = `
             UPDATE ingreso
-            SET monto = $1, fecha_ingreso = $2
-            WHERE id_ingreso = $3;
+            SET monto = $1 
+            WHERE id_ingreso = $2;
           `;
 
       // Ejecutar la consulta con parámetros
-      await pool.query(query, [
-        monto,  
-        fecha_ingreso,
-        id_ingreso 
-      ]);
+      const result = await pool.query(query, [monto, id_ingreso]);
+
 
       console.log('Ingreso actualizado correctamente');
       return true;

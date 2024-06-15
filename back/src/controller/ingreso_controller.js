@@ -21,16 +21,16 @@ class Users {
   // Método para agregar un nuevo usuario
   static async createUser(req, res) {
     try {
-      const { monto, fecha_ingreso, usuario, tipo_ingresos, miembro } = req.body;
+      const {fecha_ingreso, id_usuario, tipo_ingresos, miembro ,monto} = req.body;
 
       //console.log(monto, fecha_ingreso, usuario, tipo_ingresos, miembro )
       // Llamar al método para crear el usuario en el modelo
       const result = await Usersmodel.createUser(
-        monto,
         fecha_ingreso,
-        usuario,
+        id_usuario,
         tipo_ingresos,
-        miembro
+        miembro,
+        monto
       );
 
       // Verificar si el usuario se creó correctamente en el modelo
@@ -53,13 +53,12 @@ class Users {
   static async updateUser(req, res) {
     try {
       const { id_ingreso } = req.params;
-      const { monto ,fecha_ingreso} = req.body;
+      const { monto } = req.body;
 
       // Llamar al método para actualizar el usuario en el modelo
       const result = await Usersmodel.updateUser(
         id_ingreso,
-        monto,
-        fecha_ingreso
+        monto
       );
 
       // Verificar si el usuario se actualizó correctamente en el modelo

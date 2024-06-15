@@ -1,3 +1,4 @@
+let datosUsuario = null;
 // Función para obtener el token del servidor
 const obtenerToken = async () => {
   try {
@@ -19,7 +20,7 @@ const obtenerToken = async () => {
 
     // Verificar si la respuesta fue exitosa (código de estado 200)
     if (respuesta.ok) {
-      const datosUsuario = await respuesta.json();
+      datosUsuario = await respuesta.json();
       // Mostrar los datos en un formulario
       mostrarDatosEnFormulario(datosUsuario);
     } else {
@@ -174,24 +175,24 @@ function mayus(e) {
   };
 
   const populateFormSelects = async () => {
-      const usuarioSelect = document.getElementById("usuario");
+     /*  const usuarioSelect = document.getElementById("usuario"); */
       const tipo_ingresoSelect = document.getElementById("tipo_ingresos");
       const miembroSelect = document.getElementById("miembro");
 
 
-      const usuario = await getAllCategories();
+      /* const usuario = await getAllCategories(); */
       const tipo_ingresos = await getAllMeasures();
       const miembro = await getAllMiasures();
 
 
-      populateSelect(usuarioSelect, usuario, "id_usuario", "nombres");
+      /* populateSelect(usuarioSelect, usuario, "id_usuario", "nombres"); */
       populateSelect(tipo_ingresoSelect, tipo_ingresos, "id_tipo_ingresos", "nombre");
       populateSelect(miembroSelect, miembro, "id_miembro", "nombres");
 
 
       // Inicializa Select2 en los selectores después de haber poblado las opciones
       $(document).ready(function() {
-          $('#usuario').select2();
+         /*  $('#usuario').select2(); */
           $('#tipo_ingresos').select2();
           $('#miembro').select2();
       });
@@ -206,13 +207,15 @@ function mayus(e) {
     event.preventDefault(); // Evitars que se recargue la página al enviar el formulario
 
     // Obtener los valores del formulario, incluida la foto
-    const monto = document.getElementById("monto").value;
+   
     const fecha_ingreso = document.getElementById("fecha_ingreso").value;
-    const usuario = document.getElementById("usuario").value;
+    const {id} = await datosUsuario; 
+    const id_usuario = id;
     const tipo_ingresos = document.getElementById("tipo_ingresos").value;
     const miembro = document.getElementById("miembro").value;
+    const monto = document.getElementById("monto").value;
 
-    console.log(monto, fecha_ingreso, usuario, tipo_ingresos, miembro)
+   /*  console.log(fecha_ingreso, id_usuario, tipo_ingresos, miembro,monto) */
 
     try {
       // Verificar si el token está presente en el localStorage
@@ -233,11 +236,11 @@ function mayus(e) {
           },
           //body: formData, // Usar el FormData que contiene la foto
           body: JSON.stringify({
-            monto,
             fecha_ingreso,
-            usuario,
+            id_usuario,
             tipo_ingresos,
-            miembro
+            miembro,
+            monto
            })
         }
       );
@@ -395,11 +398,11 @@ const getAllMiasuresPromise = getAllMiasure();
   const Productos = async (product) => {
     const {
         id_ingreso,
-        monto,
         fecha_ingreso,
         id_usuario,
         id_tipo_ingresos,
         id_miembro,
+        monto,
         fecha_registro,
         estado
     } = product;
@@ -446,11 +449,11 @@ const getAllMiasuresPromise = getAllMiasure();
     return `
         <tr id="producto-row-${id_ingreso}">
             <td>${id_ingreso}</td>
-            <td>${monto}</td>
             <td>${format_ela}</td>
             <td>${usuarioNombre}</td>
             <td>${tipo_ingresosNombre}</td>
             <td>${miembroNombre}</td>
+            <td>${monto}</td>
             <td>${formattedDate}</td>
             <td>
                 <div class="container-btn-state">
@@ -688,7 +691,7 @@ const getAllMiasuresPromise = getAllMiasure();
           console.error("Error:", error.message);
           const errorMessage = document.createElement("div");
           errorMessage.innerHTML = `
-              <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
+              <div class="row vh-100 rounded align-items-center justify-content-center mx-0">
                   <div class="col-md-6 text-center p-4">
                       <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
                       <h1 class="display-1 fw-bold mb-4">Error 403</h1>
@@ -741,7 +744,7 @@ const getAllMiasuresPromise = getAllMiasure();
   };
   
   //*****************************editar usuario y guardar********************************/
-  const editproducto = (id_ingreso) => {
+ /*  const editproducto = (id_ingreso) => {
     const row = document.getElementById(`producto-row-${id_ingreso}`);
     const cells = row.getElementsByTagName("td");
   
@@ -876,7 +879,138 @@ const getAllMiasuresPromise = getAllMiasure();
       // Eliminar la clase 'active' del botón
       getAll();
     }
+  }; */
+
+ 
+  const editproducto = (id_ingreso) => {
+    const row = document.getElementById(`producto-row-${id_ingreso}`);
+    const cells = row.getElementsByTagName("td");
+  
+    // Guardar los valores originales de todas las celdas
+    const valoresOriginales = [];
+    for (let i = 0; i < cells.length; i++) {
+      const cell = cells[i];
+      valoresOriginales.push(cell.innerHTML);
+    }
+  
+    // Hacer editable solo la quinta celda (índice 4)
+    const editableIndex = 5;
+    if (cells.length > editableIndex) {
+      const cell = cells[editableIndex];
+      const oldValue = cell.innerText.trim();
+      cell.innerHTML = `<input class="tab" type="text" value="${oldValue}" style="width: 100%;">`;
+    }
+  
+    const editButton = cells[cells.length - 1].querySelector("#actualizar");
+    editButton.setAttribute(
+      "onclick",
+      `saveChanges(${id_ingreso}, ${JSON.stringify(valoresOriginales)}, this)`
+    );
   };
+  
+  // Función para guardar los cambios realizados en la fila
+  const saveChanges = async (id_ingreso, valoresOriginales, button) => {
+    const row = document.getElementById(`producto-row-${id_ingreso}`);
+    const cells = row.getElementsByTagName("td");
+    const newValues = [];
+  
+    const editableIndex = 5;
+    if (cells.length > editableIndex) {
+      const cell = cells[editableIndex];
+      const newValue = cell.getElementsByTagName("input")[0].value;
+      newValues.push(newValue);
+    }
+  
+    // Restaurar los valores de la primera celda (id_producto) y las últimas tres celdas
+    for (let i = 0; i < 1; i++) {
+      const cell = cells[i];
+      cell.innerHTML = valoresOriginales[i];
+    }
+    for (let i = cells.length - 6; i < cells.length; i++) {
+      const cell = cells[i];
+      cell.innerHTML = valoresOriginales[i];
+    }
+  
+    try {
+      // Mostrar el SweetAlert2 antes de guardar los cambios
+      const { isConfirmed } = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Quieres guardar los cambios realizados?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, guardar",
+      });
+      if (isConfirmed) {
+        // Verificar si el token está presente en el localStorage
+        const token = localStorage.getItem("token");
+        if (!token) {
+          // Si el token no está presente, redirigir al usuario a la página de inicio de sesión
+          window.location.href = "http://127.0.0.1:5500/frond/Z.administrador/login.html";
+          return; // Detener la ejecución del código
+        }
+        const response = await fetch(
+          `http://localhost:3009/ADB/ingreso/${id_ingreso}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              monto: newValues[0], // Asumiendo que el campo 'monto' es el campo editable
+            }),
+          }
+        );
+  
+        if (response.ok) {
+          const update = await response.json();
+          // Destruir DataTable antes de eliminar la fila
+          if ($.fn.DataTable.isDataTable("#myTable")) {
+            $('#myTable').DataTable().destroy();
+          }
+          // Actualizar la tabla después de cambiar el estado
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          Toast.fire({
+            icon: "success",
+            title: update.message,
+          });
+          getAll();
+        } else {
+          const update = await response.json();
+          // Actualizar la tabla después de cambiar el estado
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          Toast.fire({
+            icon: "error",
+            title: "Error al actualizar el usuario",
+          });
+          getAll();
+        }
+      } else {
+        // Si el usuario cancela, ejecutar la función getAll()
+        getAll();
+      }
+    } catch (error) {
+      console.error("Error al enviar la solicitud:", error);
+      // Eliminar la clase 'active' del botón
+      getAll();
+    }
+  };
+  
+  
   //*****************************editar usuario y guardar********************************/
   
   //*******************************inavilitar, habilitar*********************************/

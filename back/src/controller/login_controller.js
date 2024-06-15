@@ -60,19 +60,18 @@ class LoginController {
                 apellidos: user.apellidos,
                 usuario: user.usuario,
                 perfil: user.perfil,
-                username: user.usuario,
                 fecha_registro: user.fecha_registro,
+                username: user.usuario,
                 estado: user.estado,
+                primerlogin: user.primerlogin,
                 isAuthenticated: true // Agregar isAuthenticated al payload
             };
             const token = jwt.sign(tokenPayload, 'secretkey');
             console.log("Tipo de token:", typeof token); // Agregar este registro de consola
 
-            //no descomentar si no vas a poder ingresar al sistema
-
-            // Establecer la sesión del usuario
-            //req.session.user = user;
-            //req.session.isAuthenticated = true;
+            /* // Establecer la sesión del usuario
+            req.session.user = user;
+            req.session.isAuthenticated = true; */
 
             // Retornar el token
             return token;
@@ -80,6 +79,25 @@ class LoginController {
             // Devolver mensaje de error si hay algún problema
             return { error: error.message }; 
         }  
+    }
+
+    static async changePassword(req, res) {
+        try {
+            const { nuevaContraseña } = req.body;
+            const userId = req.body.userId; // Obteniendo el ID del usuario desde el cuerpo de la solicitud
+            console.log(userId)
+            console.log(nuevaContraseña)
+            // Actualizar la contraseña en la base de datos
+            const isUpdated = await buscarusers.updatePassword(userId, nuevaContraseña);
+
+            if (isUpdated) {
+                res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+            } else {
+                res.status(400).json({ error: 'Error al actualizar la contraseña' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message || 'Error al actualizar la contraseña' });
+        }
     }
 }
 

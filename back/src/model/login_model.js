@@ -66,22 +66,16 @@ class buscarusers {
             if (!pool) {
                 throw new Error('Error al conectar con PostgreSQL');
             }
+            console.log(password)
 
             // Consultar la base de datos para obtener el usuario
-            /* const query = `
-                SELECT id_usuario, nombres, apellidos, perfil, usuario, contraseña, fecha_registro, estado
-                FROM usuario WHERE usuario = $1;
-            `; */
             const query = `
-                SELECT 
-                    id_usuario, nombres, apellidos, perfil, usuario, contraseña, fecha_registro, estado
-                FROM usuario  WHERE usuario = $1;
+                SELECT id_usuario, nombres, apellidos, perfil, usuario, contraseña, estado, fecha_registro, primerlogin 
+                FROM usuario WHERE usuario = $1;
             `;
-
             // Ejecutar la consulta con parámetros
             const result = await pool.query(query, [username]);
-            //console.log(result.rows)
-
+        
             // Verificar si se encontró un usuario
             if (result.rows.length > 0) {
                 const usuario = result.rows[0];
@@ -98,10 +92,11 @@ class buscarusers {
                         id: usuario.id_usuario,
                         nombres: usuario.nombres,
                         apellidos: usuario.apellidos,
-                        perfil: usuario.perfil,
                         usuario: usuario.usuario,
+                        perfil: usuario.perfil,
                         fecha_registro: usuario.fecha_registro,
-                        estado: usuario.estado
+                        primerlogin: usuario.primerlogin,
+                        estado: usuario.estado,
                     };
                 }
             } else {
@@ -117,6 +112,55 @@ class buscarusers {
             return response;
         }
     }   
+
+    // Método para actualizar la contraseña de un usuario
+    static async updatePassword(userId, nuevaContraseña) {
+        let pool;
+        try {
+            console.log("sdgsdgshs")
+            console.log(nuevaContraseña)
+
+            pool = await connectToPostgres();
+            if (!pool) {
+                throw new Error('Error al conectar con PostgreSQL');
+            }
+
+            // Buscar el usuario por ID
+            const userResult = await pool.query('SELECT * FROM usuario WHERE id_usuario = $1', [userId]);
+            const user = userResult.rows[0];
+
+            if (!user) {
+                throw new Error('Usuario no encontrado');
+            }
+
+
+            // Encriptar la nueva contraseña
+            const hashedPassword = await bcrypt.hash(nuevaContraseña, 10);
+
+            // Actualizar la contraseña en la base de datos
+            const query = `
+                UPDATE usuario 
+                SET contraseña = $1 , primerlogin = false 
+                WHERE id_usuario = $2
+                RETURNING *;
+            `;
+
+            const result = await pool.query(query, [hashedPassword, userId]);
+
+            if (result.rowCount === 0) {
+                throw new Error('No se pudo actualizar la contraseña');
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error al cambiar contraseña:', error);
+            throw error;
+        } finally {
+            if (pool) {
+                await disconnectFromPostgres(pool);
+            }
+        }
+    }
 }
 
 module.exports = buscarusers;

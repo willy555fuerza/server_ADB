@@ -21,37 +21,38 @@ class Users {
   // Método para agregar un nuevo usuario
   static async createUser(req, res) {
     try {
-      const { monto, fecha_egreso, usuario, tipo_egresos, fecha_registro } = req.body;
+      const { fecha_egreso, id_usuario, tipo_egresos, monto,  fecha_registro } = req.body;
 
       //console.log(monto, fecha_ingreso, usuario, tipo_ingresos, miembro )
       // Llamar al método para crear el usuario en el modelo
 
       const query = `
-      INSERT INTO egreso (monto, fecha_egreso, id_usuario, id_tipo_egresos, fecha_registro)
+      INSERT INTO egreso (fecha_egreso, id_usuario, id_tipo_egresos,monto, fecha_registro)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
   `;
       const result = await Usersmodel.createUser(
-        monto,
+       
         fecha_egreso,
-        usuario,
+        id_usuario,
         tipo_egresos,
+        monto,
         fecha_registro
       );
 
       // Verificar si el usuario se creó correctamente en el modelo
       if (result) {
         // Usuario creado correctamente
-        res.status(200).json({ message: "Ingreso registrado correctamente" });
+        res.status(200).json({ message: "Egreso registrado correctamente" });
       } else {
         // Error al crear el usuario en el modelo
         res
           .status(500)
-          .json({ error: "El nombre del ingreso: " + monto + ", ya existe" });
+          .json({ error: "El nombre del egreso: " + monto + ", ya existe" });
       }
     } catch (error) {
-      console.error("Error al registrar el ingreso:", error);
-      res.status(500).json({ error: "Error al registrar el ingreso" });
+      console.error("Error al registrar el egreso:", error);
+      res.status(500).json({ error: "Error al registrar el egreso" });
     }
   }
 
@@ -77,14 +78,14 @@ class Users {
       // Verificar si el usuario se actualizó correctamente en el modelo
       if (result) {
         // Usuario actualizado correctamente
-        res.status(200).json({ message: "Ingreso actualizado correctamente" });
+        res.status(200).json({ message: "Egreso actualizado correctamente" });
       } else {
         // Error al actualizar el usuario en el modelo
-        res.status(500).json({ error: "Error al actualizar el ingreso" });
+        res.status(500).json({ error: "Error al actualizar el egreso" });
       }
     } catch (error) {
-      console.error("Error al actualizar el ingreso:", error);
-      res.status(500).json({ error: "Error al actualizar el ingreso" });
+      console.error("Error al actualizar el egreso:", error);
+      res.status(500).json({ error: "Error al actualizar el egreso" });
     }
   }
   // Método para cambiar el estado de un usuario
@@ -95,7 +96,7 @@ class Users {
       // Llamar al método para cambiar el estado del usuario en el modelo
       const result = await Usersmodel.changeState(userId, state);
       // Crear el objeto de respuesta
-      const responseObj = { message: "Ingreso inhabilitado correctamente" };
+      const responseObj = { message: "egreso inhabilitado correctamente" };
       // Enviar la respuesta
       res.status(200).json(responseObj);
     } catch (error) {
@@ -112,12 +113,12 @@ class Users {
       const result = await Usersmodel.deleteUser(userId);
 
       // Crear el objeto de respuesta
-      const responseObj = { message: "ingreso eliminado correctamente" };
+      const responseObj = { message: "egreso eliminado correctamente" };
 
       // Enviar la respuesta
       res.status(200).json(responseObj);
     } catch (error) {
-      console.error("Error al eliminar el ingreso:", error);
+      console.error("Error al eliminar el egreso:", error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
   }

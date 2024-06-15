@@ -28,7 +28,7 @@ class Usersmodel {
   }
 
   // Método para agregar un nuevo usuario
-  static async createUser(monto, fecha_egreso, usuario, tipo_egresos ) {
+  static async createUser(fecha_egreso, id_usuario, tipo_egresos,monto ) {
     let pool;
     try {
         // Conectar a la base de datos PostgreSQL
@@ -45,17 +45,17 @@ class Usersmodel {
         /* const stock = 0 */
         // Consulta para insertar un nuevo usuario en la base de datos
         const query = `
-            INSERT INTO egreso (monto, fecha_egreso, id_usuario, id_tipo_egresos, fecha_registro)
+            INSERT INTO egreso (fecha_egreso, id_usuario, id_tipo_egresos, monto, fecha_registro)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `;
 
         // Ejecutar la consulta con parámetros
         const result = await pool.query(query, [
-          monto,
           fecha_egreso,
-          usuario,
+          id_usuario,
           tipo_egresos,
+          monto,
           fecha_registro
         ]);
 
@@ -91,15 +91,15 @@ class Usersmodel {
           `;
 
       // Ejecutar la consulta con parámetros
-      const result = await pool.query(query, [
-        monto,  
-        id_egreso 
+      const result = await pool.query(query, [ 
+        monto,
+        id_egreso
       ]);
 
       console.log('Egreso actualizado correctamente');
       return true;
     } catch (error) {
-      console.error('Error al actualizar el Egeresos:', error);
+      console.error('Error al actualizar el Egresos:', error);
       return false;
     } finally {
       // Desconectar de la base de datos

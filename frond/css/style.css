@@ -7,6 +7,26 @@
     --yelow: red;
 }
 
+/* body*/
+
+/* formulario*/
+
+.container-fluid{
+    display:block;
+    justify-content: center;
+    padding-left: 15%;
+    background-color: azure;    
+}
+
+
+.position-fixed{
+    display:block;
+    justify-content: center;
+    padding-right: 10%;
+
+}
+
+
 .img{
     display: flex;
     justify-content: center;
@@ -63,8 +83,14 @@
     background-color: azure;
 }
 
+.mb-44{
+    color: rgb(244, 243, 248) ;
+    display: flex;
+    justify-content: center;
+}
+
 .mb-4{
-    color: rgb(10, 3, 37) ;
+    color: rgb(7, 3, 19) ;
     display: flex;
     justify-content: center;
 }
@@ -361,7 +387,7 @@ nav-link dropdown-toggle active{
 }
 
 .bootstrap-form-controletimepicker-widget .table th {
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .bootstrap-form-controletimepicker-widget.dropdown-menu {

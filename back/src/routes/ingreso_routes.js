@@ -5,10 +5,10 @@ const router = express.Router()
 const Users = require('../controller/ingreso_controller')
 const multer = require('multer');
 
-//const storage = multer.memoryStorage(); // Almacenar el archivo en la memoria
+const storage = multer.memoryStorage(); // Almacenar el archivo en la memoria
 
 
-//const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 
 // Ruta para obtener todos los usuarios

@@ -78,24 +78,25 @@
         <h6 class="mb-4">Registrar Egresos</h6>
         <form id="form" >
           <!--<div class="col-xl-5">-->
-            <div class="mb-3">
-              <label for="monto" class="form-label">Monto</label>
-              <input type="number" class="form-control form-control-sm" id="monto" required />
-            </div>
 
             <div class="mb-3">
               <label for="fecha_egreso" class="form-label">Fecha de Egresos</label>
               <input type="date" class="form-control form-control-sm" id="fecha_egreso" value="2024-04-20" required />
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="usuario" class="form-label">Usuarios</label>
               <select class="form-select" id="usuario" required>
               </select>
-            </div>
+            </div> -->
             <div class="mb-3">
               <label for="tipo_egresos" class="form-label">Tipos de Ingresos</label>
               <select class="form-select" id="tipo_egresos" required>
               </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="monto" class="form-label">Monto</label>
+              <input type="number" class="form-control form-control-sm" id="monto" required />
             </div>
            
             
@@ -329,10 +330,10 @@
                     <thead>
                       <tr class="text-black-50">
                         <th scope="col">#</th>
-                        <th scope="col">Monto</th>
-                        <th scope="col">Fecha de <br> Ingresos</th>
+                        <th scope="col">Fecha de <br> Egresos</th>
                         <th scope="col">Usuarios</th>
-                        <th scope="col">Tipos de Ingresos</th>
+                        <th scope="col">Tipos de Egresos</th>
+                        <th scope="col">Monto</th>
                         <th scope="col">Fecha de <br> Registro</th>
                         <th scope="col">Habilitado</th>
                         <th scope="col">Acciones</th>
